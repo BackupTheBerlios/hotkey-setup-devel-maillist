@@ -1,0 +1,102 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [Hotkey-setup-devel] [hotkey-setup]
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/hotkey-setup-devel/2007-January/index.html" >
+   <LINK REL="made" HREF="mailto:hotkey-setup-devel%40lists.berlios.de?Subject=Re%3A%20%5BHotkey-setup-devel%5D%20%5Bhotkey-setup%5D&In-Reply-To=%3C45AF747B.8020406%40redhat.com%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   
+   <LINK REL="Next"  HREF="000001.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[Hotkey-setup-devel] [hotkey-setup]</H1>
+    <B>Florian Festi</B> 
+    <A HREF="mailto:hotkey-setup-devel%40lists.berlios.de?Subject=Re%3A%20%5BHotkey-setup-devel%5D%20%5Bhotkey-setup%5D&In-Reply-To=%3C45AF747B.8020406%40redhat.com%3E"
+       TITLE="[Hotkey-setup-devel] [hotkey-setup]">ffesti at redhat.com
+       </A><BR>
+    <I>Thu Jan 18 14:22:03 CET 2007</I>
+    <P><UL>
+        
+        <LI>Next message: <A HREF="000001.html">[Hotkey-setup-devel] [hotkey-setup] Polling patch,	mailing list and Makefile twiddle
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#0">[ date ]</a>
+              <a href="thread.html#0">[ thread ]</a>
+              <a href="subject.html#0">[ subject ]</a>
+              <a href="author.html#0">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Hi!
+
+I just checked in my scripts for reading keyboard files from several 
+projects and for creating hotkey-setup (h-s) compatible results
+
+There are also scripts for generating X11 configuration.
+
+Although I made some effort to make them publishable they are still hackery 
+and to be handled with care. My medium-term goal is to extend h-s to support 
+AT/PS/2 internet key boards by setting a config var (perhaps in 
+/etc/sysconfig/keyboard for FC/RHEL). But this is postponed until I got the 
+upper stack (X11 and up) working.
+
+Things I plan to do next to h-s:
+
+  * make dist
+  * make install
+  * may be move *.hk into an own subdir
+  * Check the SuSE patches for inclusion. I attached them. Please have a look
+    if you have objections
+
+Just FYI: FC will change from dmidecode to hal for detecting make and model.
+
+Does anyone else have something that should go into the repository?
+
+Florian
+
+P.S.: @Dirk and Paul: I'll remove you from the CC list from now on. Please 
+add yourself to the mailing list or state if you if you want to be CCed in 
+the future.
+-------------- next part --------------
+A non-text attachment was scrubbed...
+Name: hotkey-setup.diff
+Type: text/x-patch
+Size: 324 bytes
+Desc: not available
+URL: &lt;<A HREF="https://lists.berlios.de/pipermail/hotkey-setup-devel/attachments/20070118/9c2b59bd/attachment.bin">https://lists.berlios.de/pipermail/hotkey-setup-devel/attachments/20070118/9c2b59bd/attachment.bin</A>&gt;
+-------------- next part --------------
+A non-text attachment was scrubbed...
+Name: thinkpad-keys-reduce-polling-thoenig-01.patch
+Type: text/x-patch
+Size: 1167 bytes
+Desc: not available
+URL: &lt;<A HREF="https://lists.berlios.de/pipermail/hotkey-setup-devel/attachments/20070118/9c2b59bd/attachment-0001.bin">https://lists.berlios.de/pipermail/hotkey-setup-devel/attachments/20070118/9c2b59bd/attachment-0001.bin</A>&gt;
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	
+	<LI>Next message: <A HREF="000001.html">[Hotkey-setup-devel] [hotkey-setup] Polling patch,	mailing list and Makefile twiddle
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#0">[ date ]</a>
+              <a href="thread.html#0">[ thread ]</a>
+              <a href="subject.html#0">[ subject ]</a>
+              <a href="author.html#0">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/hotkey-setup-devel">More information about the Hotkey-setup-devel
+mailing list</a><br>
+</body></html>

@@ -1,0 +1,75 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [Hotkey-setup-devel] Remapping on the device using EVIOCSKEYCODE	rather than KDSETKEYCODE
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/hotkey-setup-devel/2007-January/index.html" >
+   <LINK REL="made" HREF="mailto:hotkey-setup-devel%40lists.berlios.de?Subject=Re%3A%20%5BHotkey-setup-devel%5D%20Remapping%20on%20the%20device%20using%20EVIOCSKEYCODE%0A%09rather%20than%20KDSETKEYCODE&In-Reply-To=%3CPine.LNX.4.21.0701270414200.32102-100000%40starsky.19inch.net%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000001.html">
+   
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[Hotkey-setup-devel] Remapping on the device using EVIOCSKEYCODE	rather than KDSETKEYCODE</H1>
+    <B>Paul Sladen</B> 
+    <A HREF="mailto:hotkey-setup-devel%40lists.berlios.de?Subject=Re%3A%20%5BHotkey-setup-devel%5D%20Remapping%20on%20the%20device%20using%20EVIOCSKEYCODE%0A%09rather%20than%20KDSETKEYCODE&In-Reply-To=%3CPine.LNX.4.21.0701270414200.32102-100000%40starsky.19inch.net%3E"
+       TITLE="[Hotkey-setup-devel] Remapping on the device using EVIOCSKEYCODE	rather than KDSETKEYCODE">ubuntu at paul.sladen.org
+       </A><BR>
+    <I>Sat Jan 27 05:20:51 CET 2007</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000001.html">[Hotkey-setup-devel] [hotkey-setup] Polling patch,	mailing list and Makefile twiddle
+</A></li>
+        
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#2">[ date ]</a>
+              <a href="thread.html#2">[ thread ]</a>
+              <a href="subject.html#2">[ subject ]</a>
+              <a href="author.html#2">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Currently mapping is done by called 'setkeycodes' which uses
+
+  ioctl(get_console_fd(0), KDSETKEYCODE, [from, to])
+
+on the current console.  The code is nice and reliable (dated 1994...) but
+we now have the input layer which can mean per-device remapping---probably
+what we're actually wanting.
+
+Lennart has an example of this working in his 'fuzzkey.c':
+
+  <A HREF="http://0pointer.de/cgi-bin/viewcvs.cgi/trunk/src/keyfuzz.c?rev=3&amp;root=keyfuzz">http://0pointer.de/cgi-bin/viewcvs.cgi/trunk/src/keyfuzz.c?rev=3&amp;root=keyfuzz</A>
+
+	-Paul
+-- 
+Why do one side of a triangle when you can do all three.   Southampton, GB
+
+
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000001.html">[Hotkey-setup-devel] [hotkey-setup] Polling patch,	mailing list and Makefile twiddle
+</A></li>
+	
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#2">[ date ]</a>
+              <a href="thread.html#2">[ thread ]</a>
+              <a href="subject.html#2">[ subject ]</a>
+              <a href="author.html#2">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/hotkey-setup-devel">More information about the Hotkey-setup-devel
+mailing list</a><br>
+</body></html>

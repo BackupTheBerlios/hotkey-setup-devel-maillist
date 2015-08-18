@@ -1,0 +1,135 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [Hotkey-setup-devel] [hotkey-setup] Polling patch,	mailing list and Makefile twiddle
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/hotkey-setup-devel/2007-January/index.html" >
+   <LINK REL="made" HREF="mailto:hotkey-setup-devel%40lists.berlios.de?Subject=Re%3A%20%5BHotkey-setup-devel%5D%20%5Bhotkey-setup%5D%20Polling%20patch%2C%0A%09mailing%20list%20and%20Makefile%20twiddle&In-Reply-To=%3CPine.LNX.4.21.0701181407250.26793-100000%40starsky.19inch.net%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000000.html">
+   <LINK REL="Next"  HREF="000002.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[Hotkey-setup-devel] [hotkey-setup] Polling patch,	mailing list and Makefile twiddle</H1>
+    <B>Paul Sladen</B> 
+    <A HREF="mailto:hotkey-setup-devel%40lists.berlios.de?Subject=Re%3A%20%5BHotkey-setup-devel%5D%20%5Bhotkey-setup%5D%20Polling%20patch%2C%0A%09mailing%20list%20and%20Makefile%20twiddle&In-Reply-To=%3CPine.LNX.4.21.0701181407250.26793-100000%40starsky.19inch.net%3E"
+       TITLE="[Hotkey-setup-devel] [hotkey-setup] Polling patch,	mailing list and Makefile twiddle">ubuntu at paul.sladen.org
+       </A><BR>
+    <I>Thu Jan 18 15:57:51 CET 2007</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000000.html">[Hotkey-setup-devel] [hotkey-setup]
+</A></li>
+        <LI>Next message: <A HREF="000002.html">[Hotkey-setup-devel] Remapping on the device using EVIOCSKEYCODE	rather than KDSETKEYCODE
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#1">[ date ]</a>
+              <a href="thread.html#1">[ thread ]</a>
+              <a href="subject.html#1">[ subject ]</a>
+              <a href="author.html#1">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>On Thu, 18 Jan 2007, Florian Festi wrote:
+
+Okay, I've signed up to the list, for reference;  the URLs:
+
+  <A HREF="http://svn.berlios.de/wsvn/hotkey-setup/trunk/?rev=0&amp;sc=0">http://svn.berlios.de/wsvn/hotkey-setup/trunk/?rev=0&amp;sc=0</A>
+  <A HREF="https://lists.berlios.de/mailman/listinfo/hotkey-setup-devel">https://lists.berlios.de/mailman/listinfo/hotkey-setup-devel</A>
+
+&gt;<i> [..] and for creating hotkey-setup (h-s) compatible results.  Although I
+</I>&gt;<i> made some effort to make them publishable they are still hackery
+</I>
+I've had a good read through them but mostly only noticed minor spelling
+mistakes---I'm impressed, thank you!  There's one mention of 'xkb_alias.py'
+which isn't included;  maybe remove the note as it's sounds exciting!
+
+&gt;<i> My medium-term goal is to extend h-s to support AT/PS/2 internet keyboards
+</I>
+These are ones that aren't built-in (eg. non laptops)?
+
+&gt;<i>   * may be move *.hk into an own subdir
+</I>&gt;<i>   * Check the SuSE patches for inclusion. I attached them. Please have a look
+</I>&gt;<i>     if you have objections
+</I>
+The reduced polling patch should cope with some of the excessive CPU usage
+on recent LenovoPads---Mark was complaining about that after getting an
+X60s.  One of the thoughts I had was varying the polling rate between
+different keys;  the brightness is handled in hardware (and sometimes one of
+the keys also generates an ACPI event aswell).
+
+The feedback for Brightness/ThinkLight is already visual and the key presses
+are merely a hint for the new status to be displayed.  Response time is not
+critical as the resulting number of brightness steps is absolute.
+
+Volume is sometimes handled in hardware, but ideally I want to find an
+additional way of handling this so that the ALSA and hardware mixer
+(including mute) are always kept in step (the daft GNOME asymmetric volume
+control really needs backing out)[0].  This should be fairly responsive.
+
+The other two (Zoom/Mode Switch) and Access IBM can probably be semi low
+priority aswell---but these do need to activate events /before/ the user
+decides that nothing has happened and pushes them again!
+
+&gt;<i> Just FYI: FC will change from dmidecode to hal for detecting make and model.
+</I>
+I'm fine for this aswell, as long as it doesn't break the existing working
+cases---I think there is the odd case were I resorted to some fairly
+desparate matching.
+
+One issue I'm unsure about (it's a policy decision and I hate those).  I've
+recently been given a clone Mac keyboard which is fine as a normal layout
+(&quot;PC layout&quot;) however the layout on the keyboard is such that Print-Screen
+and friends are labelled 'F13/F14/F15'.  The completely mad thing is
+'Insert' being labelled as 'Help'.
+
+What are we aiming for, to have detect the USB ID of this keyboard and to
+patch that help to box-of-the-box generate exactly what it says on the key,
+in this case 'Help'?
+
+	-Paul
+
+[0] mpt (usability guy) suggests that whilst the idea of the asymmetric
+volume decreasing faster than increasing is a nice one (you are often eager
+to turn it down)---it's the implementation is wrong. The *repeat-rate* of
+the volup/voldown keys should be adjusted, not the amount of effect they
+have.  Ideally:
+
+  Press VolUp   ~14 times and get Maximum Volume.
+  Press VolDown ~14 times and get Minimum Volume.
+  Hold VolUp    ~ 5 seconds and get Maximum Volume (still 14 steps)
+  Hold VolDown  ~ 3 seconds and get Minimum Volume (still 14 steps)
+
+This is hard to do as the repeat-rate is normally handled by hardware.
+-- 
+Why do one side of a triangle when you can do all three.   London, GB
+
+
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000000.html">[Hotkey-setup-devel] [hotkey-setup]
+</A></li>
+	<LI>Next message: <A HREF="000002.html">[Hotkey-setup-devel] Remapping on the device using EVIOCSKEYCODE	rather than KDSETKEYCODE
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#1">[ date ]</a>
+              <a href="thread.html#1">[ thread ]</a>
+              <a href="subject.html#1">[ subject ]</a>
+              <a href="author.html#1">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/hotkey-setup-devel">More information about the Hotkey-setup-devel
+mailing list</a><br>
+</body></html>

@@ -1,0 +1,162 @@
+From ffesti at redhat.com  Thu Jan 18 14:22:03 2007
+From: ffesti at redhat.com (Florian Festi)
+Date: Thu, 18 Jan 2007 14:22:03 +0100
+Subject: [Hotkey-setup-devel] [hotkey-setup]
+In-Reply-To: <200612131536.29364.dmueller@suse.de>
+References: <45800321.2060102@redhat.com> <200612131536.29364.dmueller@suse.de>
+Message-ID: <45AF747B.8020406@redhat.com>
+
+Hi!
+
+I just checked in my scripts for reading keyboard files from several 
+projects and for creating hotkey-setup (h-s) compatible results
+
+There are also scripts for generating X11 configuration.
+
+Although I made some effort to make them publishable they are still hackery 
+and to be handled with care. My medium-term goal is to extend h-s to support 
+AT/PS/2 internet key boards by setting a config var (perhaps in 
+/etc/sysconfig/keyboard for FC/RHEL). But this is postponed until I got the 
+upper stack (X11 and up) working.
+
+Things I plan to do next to h-s:
+
+  * make dist
+  * make install
+  * may be move *.hk into an own subdir
+  * Check the SuSE patches for inclusion. I attached them. Please have a look
+    if you have objections
+
+Just FYI: FC will change from dmidecode to hal for detecting make and model.
+
+Does anyone else have something that should go into the repository?
+
+Florian
+
+P.S.: @Dirk and Paul: I'll remove you from the CC list from now on. Please 
+add yourself to the mailing list or state if you if you want to be CCed in 
+the future.
+-------------- next part --------------
+A non-text attachment was scrubbed...
+Name: hotkey-setup.diff
+Type: text/x-patch
+Size: 324 bytes
+Desc: not available
+URL: <https://lists.berlios.de/pipermail/hotkey-setup-devel/attachments/20070118/9c2b59bd/attachment.bin>
+-------------- next part --------------
+A non-text attachment was scrubbed...
+Name: thinkpad-keys-reduce-polling-thoenig-01.patch
+Type: text/x-patch
+Size: 1167 bytes
+Desc: not available
+URL: <https://lists.berlios.de/pipermail/hotkey-setup-devel/attachments/20070118/9c2b59bd/attachment-0001.bin>
+
+From ubuntu at paul.sladen.org  Thu Jan 18 15:57:51 2007
+From: ubuntu at paul.sladen.org (Paul Sladen)
+Date: Thu, 18 Jan 2007 14:57:51 +0000 (GMT)
+Subject: [Hotkey-setup-devel] [hotkey-setup] Polling patch,
+	mailing list and Makefile twiddle
+In-Reply-To: <45AF747B.8020406@redhat.com>
+Message-ID: <Pine.LNX.4.21.0701181407250.26793-100000@starsky.19inch.net>
+
+On Thu, 18 Jan 2007, Florian Festi wrote:
+
+Okay, I've signed up to the list, for reference;  the URLs:
+
+  http://svn.berlios.de/wsvn/hotkey-setup/trunk/?rev=0&sc=0
+  https://lists.berlios.de/mailman/listinfo/hotkey-setup-devel
+
+> [..] and for creating hotkey-setup (h-s) compatible results.  Although I
+> made some effort to make them publishable they are still hackery
+
+I've had a good read through them but mostly only noticed minor spelling
+mistakes---I'm impressed, thank you!  There's one mention of 'xkb_alias.py'
+which isn't included;  maybe remove the note as it's sounds exciting!
+
+> My medium-term goal is to extend h-s to support AT/PS/2 internet keyboards
+
+These are ones that aren't built-in (eg. non laptops)?
+
+>   * may be move *.hk into an own subdir
+>   * Check the SuSE patches for inclusion. I attached them. Please have a look
+>     if you have objections
+
+The reduced polling patch should cope with some of the excessive CPU usage
+on recent LenovoPads---Mark was complaining about that after getting an
+X60s.  One of the thoughts I had was varying the polling rate between
+different keys;  the brightness is handled in hardware (and sometimes one of
+the keys also generates an ACPI event aswell).
+
+The feedback for Brightness/ThinkLight is already visual and the key presses
+are merely a hint for the new status to be displayed.  Response time is not
+critical as the resulting number of brightness steps is absolute.
+
+Volume is sometimes handled in hardware, but ideally I want to find an
+additional way of handling this so that the ALSA and hardware mixer
+(including mute) are always kept in step (the daft GNOME asymmetric volume
+control really needs backing out)[0].  This should be fairly responsive.
+
+The other two (Zoom/Mode Switch) and Access IBM can probably be semi low
+priority aswell---but these do need to activate events /before/ the user
+decides that nothing has happened and pushes them again!
+
+> Just FYI: FC will change from dmidecode to hal for detecting make and model.
+
+I'm fine for this aswell, as long as it doesn't break the existing working
+cases---I think there is the odd case were I resorted to some fairly
+desparate matching.
+
+One issue I'm unsure about (it's a policy decision and I hate those).  I've
+recently been given a clone Mac keyboard which is fine as a normal layout
+("PC layout") however the layout on the keyboard is such that Print-Screen
+and friends are labelled 'F13/F14/F15'.  The completely mad thing is
+'Insert' being labelled as 'Help'.
+
+What are we aiming for, to have detect the USB ID of this keyboard and to
+patch that help to box-of-the-box generate exactly what it says on the key,
+in this case 'Help'?
+
+	-Paul
+
+[0] mpt (usability guy) suggests that whilst the idea of the asymmetric
+volume decreasing faster than increasing is a nice one (you are often eager
+to turn it down)---it's the implementation is wrong. The *repeat-rate* of
+the volup/voldown keys should be adjusted, not the amount of effect they
+have.  Ideally:
+
+  Press VolUp   ~14 times and get Maximum Volume.
+  Press VolDown ~14 times and get Minimum Volume.
+  Hold VolUp    ~ 5 seconds and get Maximum Volume (still 14 steps)
+  Hold VolDown  ~ 3 seconds and get Minimum Volume (still 14 steps)
+
+This is hard to do as the repeat-rate is normally handled by hardware.
+-- 
+Why do one side of a triangle when you can do all three.   London, GB
+
+
+
+From ubuntu at paul.sladen.org  Sat Jan 27 05:20:51 2007
+From: ubuntu at paul.sladen.org (Paul Sladen)
+Date: Sat, 27 Jan 2007 04:20:51 +0000 (GMT)
+Subject: [Hotkey-setup-devel] Remapping on the device using EVIOCSKEYCODE
+	rather than KDSETKEYCODE
+Message-ID: <Pine.LNX.4.21.0701270414200.32102-100000@starsky.19inch.net>
+
+Currently mapping is done by called 'setkeycodes' which uses
+
+  ioctl(get_console_fd(0), KDSETKEYCODE, [from, to])
+
+on the current console.  The code is nice and reliable (dated 1994...) but
+we now have the input layer which can mean per-device remapping---probably
+what we're actually wanting.
+
+Lennart has an example of this working in his 'fuzzkey.c':
+
+  http://0pointer.de/cgi-bin/viewcvs.cgi/trunk/src/keyfuzz.c?rev=3&root=keyfuzz
+
+	-Paul
+-- 
+Why do one side of a triangle when you can do all three.   Southampton, GB
+
+
+
